@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Little Boxie World Wait Times</title>
+  <meta property="og:title" content="Little Boxie World Wait Times">
+  <meta property="og:description" content="Live ceremonial wait times from the Covenant Kingdom's cleanest theme park.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #24170f;
+      --paper: #f4d995;
+      --paper2: #fff0bf;
+      --red: #9f2d25;
+      --blue: #145d86;
+      --gold: #d39b2d;
+      --green: #537d3f;
+      --purple: #5c3a7d;
+      --shadow: rgba(32, 18, 9, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(211, 155, 45, 0.36), transparent 24rem),
+        radial-gradient(circle at 95% 8%, rgba(20, 93, 134, 0.26), transparent 24rem),
+        linear-gradient(145deg, #0d344d 0%, #1d694f 46%, #3f2418 100%);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    main {
+      width: min(1050px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--paper2), var(--paper));
+      box-shadow: 0 7px 0 var(--shadow);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--red);
+      font-size: clamp(1.45rem, 6vw, 3rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 0 #fff5cf, 2px 2px 0 rgba(36, 23, 15, 0.28);
+      letter-spacing: 0;
+    }
+
+    .stamp {
+      min-width: 92px;
+      padding: 8px 10px;
+      border: 3px double var(--ink);
+      border-radius: 50%;
+      background: #fff2bc;
+      color: var(--blue);
+      text-align: center;
+      font: 900 0.72rem/1.05 Arial, sans-serif;
+      text-transform: uppercase;
+      transform: rotate(4deg);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      box-shadow: 0 8px 0 var(--shadow);
+      background: #123;
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      max-height: 390px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-card {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: grid;
+      gap: 5px;
+      max-width: 560px;
+      padding: 10px 12px;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      background: rgba(255, 240, 191, 0.93);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-card strong {
+      color: var(--blue);
+      font: 900 0.78rem/1 Arial, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .hero-card span {
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      min-height: 44px;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      background: var(--paper2);
+      color: var(--ink);
+      font: 900 0.88rem/1 Arial, sans-serif;
+      text-transform: uppercase;
+      box-shadow: 3px 3px 0 var(--shadow);
+      cursor: pointer;
+    }
+
+    button.active {
+      background: var(--blue);
+      color: #fff8d4;
+    }
+
+    #refreshBtn {
+      background: var(--red);
+      color: #fff7d2;
+      padding: 0 14px;
+    }
+
+    .board {
+      display: grid;
+      gap: 10px;
+    }
+
+    .notice {
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff2bc;
+      box-shadow: 0 5px 0 var(--shadow);
+    }
+
+    .notice .label,
+    .meta {
+      font: 900 0.74rem/1 Arial, sans-serif;
+      color: var(--red);
+      text-transform: uppercase;
+    }
+
+    .notice p {
+      margin: 6px 0 0;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .boxie-plus-ad {
+      display: grid;
+      grid-template-columns: minmax(120px, 220px) 1fr;
+      gap: 12px;
+      align-items: center;
+      overflow: hidden;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #071724, #102b3e 55%, #26180e);
+      color: #fff0bf;
+      box-shadow: 0 5px 0 var(--shadow);
+      text-decoration: none;
+    }
+
+    .boxie-plus-ad img {
+      width: 100%;
+      height: 100%;
+      min-height: 118px;
+      object-fit: cover;
+      display: block;
+      border-right: 3px solid var(--ink);
+    }
+
+    .boxie-plus-copy {
+      display: grid;
+      gap: 5px;
+      padding: 12px 14px 12px 2px;
+    }
+
+    .boxie-plus-copy strong {
+      color: #f7d580;
+      font-size: clamp(1.25rem, 4vw, 2.1rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+    }
+
+    .boxie-plus-copy span {
+      font: 900 0.78rem/1.1 Arial, sans-serif;
+      text-transform: uppercase;
+      color: #fff5cf;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 104px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 12px;
+      background:
+        radial-gradient(circle at 92% 10%, rgba(211, 155, 45, 0.28), transparent 7rem),
+        linear-gradient(180deg, #fff1bd, #eecf85);
+      box-shadow: 0 5px 0 var(--shadow);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image: radial-gradient(var(--ink) 0.7px, transparent 0.7px);
+      background-size: 8px 8px;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .name {
+      margin: 0;
+      color: var(--blue);
+      font-size: 1.16rem;
+      line-height: 1.05;
+    }
+
+    .land {
+      margin-top: 5px;
+      font: 900 0.72rem/1 Arial, sans-serif;
+      text-transform: uppercase;
+      color: var(--purple);
+    }
+
+    .advisory {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #3c2717;
+      font-size: 0.96rem;
+      line-height: 1.2;
+    }
+
+    .wait {
+      min-width: 86px;
+      padding: 8px 6px;
+      border: 3px solid var(--ink);
+      border-radius: 6px;
+      background: #fff8d5;
+      text-align: center;
+      box-shadow: inset 0 -4px 0 rgba(36, 23, 15, 0.1);
+    }
+
+    .wait strong {
+      display: block;
+      color: var(--red);
+      font: 900 1.65rem/0.95 Arial, sans-serif;
+    }
+
+    .wait span {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font: 900 0.64rem/1 Arial, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .status-low strong { color: var(--green); }
+    .status-high strong { color: var(--red); }
+    .status-closed strong { font-size: 1.04rem; color: var(--purple); }
+
+    footer {
+      padding: 8px 4px 14px;
+      color: #fff1bd;
+      text-align: center;
+      font: 700 0.8rem/1.25 Arial, sans-serif;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+    }
+
+    @media (max-width: 620px) {
+      main { padding: 8px; }
+      header { grid-template-columns: 1fr; }
+      .stamp {
+        justify-self: start;
+        border-radius: 6px;
+        transform: rotate(-1deg);
+      }
+      .toolbar { grid-template-columns: 1fr; }
+      .hero-card {
+        position: static;
+        border-width: 0;
+        border-top: 3px solid var(--ink);
+        max-width: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .hero img {
+        min-height: 190px;
+        max-height: 260px;
+      }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: 112px; }
+      .boxie-plus-ad { grid-template-columns: 1fr; }
+      .boxie-plus-ad img {
+        height: auto;
+        max-height: 190px;
+        border-right: 0;
+        border-bottom: 3px solid var(--ink);
+      }
+      .boxie-plus-copy { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Little Boxie World Wait Times</h1>
+      <div class="stamp">Approved<br>by Guest<br>Services</div>
+    </header>
+
+    <section class="hero" aria-label="Little Boxie World park map">
+      <img src="assets/little-boxie-world-map.png" alt="Illustrated Little Boxie World theme park map">
+      <div class="hero-card">
+        <strong>The Covenant Kingdom Awaits</strong>
+        <span id="parkMood">Park conditions are being ceremonially assessed.</span>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Wait board controls">
+      <div class="tabs">
+        <button class="active" data-view="rides">Attractions</button>
+        <button data-view="food">Restaurants</button>
+        <button data-view="alerts">Alerts</button>
+      </div>
+      <button id="refreshBtn" type="button">Refresh</button>
+    </section>
+
+    <section class="board">
+      <div class="notice">
+        <div class="label">Live Advisory</div>
+        <p id="liveAdvisory">Please remain calm while the priests locate the clipboard.</p>
+        <div class="meta" id="updatedAt">Last blessed: --:--</div>
+      </div>
+      <a class="boxie-plus-ad" href="https://buymeacoffee.com/Collective001" target="_blank" rel="noopener noreferrer" aria-label="Subscribe to Boxie Plus today">
+        <img src="assets/boxie-plus.jpg" alt="Boxie Plus subscription emblem">
+        <span class="boxie-plus-copy">
+          <strong>Subscribe to Boxie+ today!</strong>
+          <span>Premium purification. Fewer lines. More covenant.</span>
+        </span>
+      </a>
+      <div class="grid" id="cards"></div>
+    </section>
+
+    <footer>
+      Times are estimates only. Actual purification may vary due to sandals, mixed fabrics, and sudden trumpet obligations.
+    </footer>
+  </main>
+
+  <script>
+    const attractions = [
+      { name: "Escape to Azazel", land: "Wilderness of Azazel", base: 42, spread: 36, note: "Includes one goat, two exits, and absolutely no refunds." },
+      { name: "The Great Purge", land: "Wilderness of Azazel", base: 31, spread: 28, note: "Guests may experience spiritual motion sickness." },
+      { name: "The Scrape & Stone", land: "Wilderness of Azazel", base: 18, spread: 18, note: "Closed briefly whenever someone asks what the scraping is for." },
+      { name: "The Forbidden Blend", land: "Festival of Offerings", base: 54, spread: 44, note: "A high-speed dark ride through wool, linen, and regret." },
+      { name: "The Tithing House: 1 in 10", land: "The Covenant Kingdom", base: 23, spread: 30, note: "One in every ten riders gets a souvenir receipt." },
+      { name: "The Jubilee Journey", land: "The Covenant Kingdom", base: 12, spread: 22, note: "Every fiftieth guest gets their property theoretically restored." },
+      { name: "The Uncloven Hoof", land: "Children's Corral", base: 26, spread: 31, note: "Family coaster. Mild judgment. Moderate bleating." },
+      { name: "Waters of Purification Flume", land: "Waters of Purification", base: 16, spread: 20, note: "You will get wet. You will be told it was necessary." },
+      { name: "Salt of the Covenant Stunt Spectacular", land: "Wilderness of Azazon", base: 35, spread: 35, note: "Now with 40 percent more theatrical pillar work." }
+    ];
+
+    const restaurants = [
+      { name: "Nadab & Abihu's Blazing Fury", land: "Restaurants", base: 28, spread: 26, note: "The fryer has opinions and several warnings." },
+      { name: "Nadab & Abihu's Blooming Furnace", land: "Restaurants", base: 18, spread: 22, note: "Signature appetizer arrives flaming and apologizing." },
+      { name: "Seven-Day Spice-and-Stew", land: "Restaurants", base: 41, spread: 28, note: "The stew is patient. The line is not." },
+      { name: "Swarming, Creeping Things Canteen", land: "Restaurants", base: 9, spread: 16, note: "Unexpectedly popular with adventurous uncles." },
+      { name: "Grain Offering Mixer", land: "Restaurants", base: 14, spread: 19, note: "Now offering gluten-free guilt." },
+      { name: "Two Turtle-Dove Bumper Cars", land: "Restaurants", base: 33, spread: 33, note: "Technically not a restaurant. Management refuses to explain." },
+      { name: "The Shewbread Snackery", land: "The Burnt Offering Buffet", base: 25, spread: 27, note: "Twelve loaves enter. One family leaves smug." }
+    ];
+
+    const alerts = [
+      { name: "Priest-Only Immersion Lounge", land: "Guest Advisory", kind: "info", note: "Currently at capacity due to a sandal incident." },
+      { name: "Clay Carwash", land: "Waters of Purification", kind: "info", note: "Accepting compact donkeys and most family sedans." },
+      { name: "Mixed Fabric Detection", land: "Parkwide", kind: "warning", note: "Please report all suspicious cardigans to Guest Services." },
+      { name: "Trumpet Rehearsal", land: "The First Temple", kind: "warning", note: "Sudden ceremonial brass may affect snack stability." },
+      { name: "Unclean Cushion Watch", land: "Children's Corral", kind: "warning", note: "Boxie has been dispatched. Remain upright." },
+      { name: "Find Freedom Sign", land: "Wilderness of Azazel", kind: "info", note: "The sign is currently pointing at three different exits." }
+    ];
+
+    const moods = [
+      "Cleanliness is high, but confidence is higher.",
+      "Guest Services reports a manageable amount of smiting paperwork.",
+      "The park is operating under normal ceremonial weirdness.",
+      "A faint ooze has been detected near the bumper cars. Boxie is en route.",
+      "Priest Assistance is available for lost children, lost scrolls, and spiritually confusing pretzels.",
+      "The Covenant Kingdom is currently sparkling in a way that feels legally binding."
+    ];
+
+    const advisories = [
+      "Guests in mixed fabrics may be asked to stand in the reconsideration gazebo.",
+      "The Unclean Cushion has not escaped today, which is the standard we strive for.",
+      "Due to high winds, all ceremonial sand must remain in approved ceremonial zones.",
+      "Please do not feed the scapegoat. He has a lot going on.",
+      "All restaurants are subject to surprise blessing, closure, or dramatic trumpet.",
+      "Little Boxie reminds guests: cleanliness starts with courage and possibly a mop."
+    ];
+
+    let currentView = "rides";
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function waitFor(item) {
+      const roll = Math.random();
+      if (roll > 0.92) return { label: "Closed", detail: "For Review", className: "status-closed" };
+      if (roll > 0.84) return { label: "Delayed", detail: "Priests", className: "status-closed" };
+      const value = Math.max(5, item.base + randomInt(-8, item.spread));
+      const rounded = Math.round(value / 5) * 5;
+      return {
+        label: String(rounded),
+        detail: "minutes",
+        className: rounded <= 20 ? "status-low" : rounded >= 55 ? "status-high" : ""
+      };
+    }
+
+    function cardFor(item, view) {
+      if (view === "alerts") {
+        const status = item.kind === "warning" ? "Watch" : "Notice";
+        return `
+          <article class="card">
+            <div>
+              <h2 class="name">${item.name}</h2>
+              <div class="land">${item.land}</div>
+            </div>
+            <div class="wait ${item.kind === "warning" ? "status-high" : "status-low"}">
+              <strong>${status}</strong>
+              <span>active</span>
+            </div>
+            <p class="advisory">${item.note}</p>
+          </article>
+        `;
+      }
+
+      const wait = waitFor(item);
+      return `
+        <article class="card">
+          <div>
+            <h2 class="name">${item.name}</h2>
+            <div class="land">${item.land}</div>
+          </div>
+          <div class="wait ${wait.className}">
+            <strong>${wait.label}</strong>
+            <span>${wait.detail}</span>
+          </div>
+          <p class="advisory">${item.note}</p>
+        </article>
+      `;
+    }
+
+    function render() {
+      const source = currentView === "food" ? restaurants : currentView === "alerts" ? alerts : attractions;
+      document.querySelector("#cards").innerHTML = source.map(item => cardFor(item, currentView)).join("");
+      document.querySelector("#parkMood").textContent = moods[randomInt(0, moods.length - 1)];
+      document.querySelector("#liveAdvisory").textContent = advisories[randomInt(0, advisories.length - 1)];
+      document.querySelector("#updatedAt").textContent = `Last blessed: ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
+    }
+
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.addEventListener("click", () => {
+        currentView = button.dataset.view;
+        document.querySelectorAll("[data-view]").forEach(item => item.classList.toggle("active", item === button));
+        render();
+      });
+    });
+
+    document.querySelector("#refreshBtn").addEventListener("click", render);
+    render();
+  </script>
+</body>
+</html>
